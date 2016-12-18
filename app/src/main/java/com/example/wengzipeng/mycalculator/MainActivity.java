@@ -12,66 +12,66 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import java.nio.BufferUnderflowException;
-import java.nio.DoubleBuffer;
-
 public class MainActivity extends AppCompatActivity {
     private Button calculatorButton;
     private EditText weightEdittext;
     private RadioButton manRadioButton;
     private RadioButton womanRadioButton;
-    private TextView resultTextView;
+    private TextView resultTextview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
-        calculatorButton=(Button) findViewById(R.id.calculate);
-        weightEdittext=(EditText) findViewById(R.id.weigth);
-        manRadioButton=(RadioButton) findViewById(R.id.man);
-        womanRadioButton=(RadioButton) findViewById(R.id.woman);
-        resultTextView=(TextView) findViewById(R.id.result);
+        calculatorButton = (Button) findViewById(R.id.caculate);
+        weightEdittext = (EditText) findViewById(R.id.weight);
+        manRadioButton = (RadioButton) findViewById(R.id.man);
+        womanRadioButton = (RadioButton) findViewById(R.id.woman);
+        resultTextview = (TextView) findViewById(R.id.result);
     }
-    protected void onStart(){
+
+    @Override
+    protected void onStart() {
         super.onStart();
+        //执行点击事件
         registerEvent();
     }
-
-    private void registerEvent() {
+    private void registerEvent(){
         calculatorButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+                //判断是否输入体重
                 if(!weightEdittext.getText().toString().trim().equals("")){
-                    if(manRadioButton.isChecked()||womanRadioButton.isChecked()){
-                        Double weight= Double.parseDouble(weightEdittext.getText().toString());
-                        StringBuffer sb=new StringBuffer();
-                        sb.append("------评估结果-------\n");
+                    //判断是否选择性别
+                    if (manRadioButton.isChecked()||womanRadioButton.isChecked()){
+                        Double weight = Double.parseDouble(weightEdittext.getText().toString());
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("------评测结果------\n");
                         if(manRadioButton.isChecked()){
                             sb.append("男性标准身高：");
-                            double result= evaluateHeight(weight,"男");
+                            double result = evaluateHeight(weight,"男");
                             sb.append((int)result+"厘米");
-                        }else{
-                            sb.append("女性标准身高：");
-                            double result= evaluateHeight(weight,"女");
+                        }else {
+                            sb.append("女性标准身高");
+                            double result = evaluateHeight(weight,"女");
                             sb.append((int)result+"厘米");
                         }
-                        resultTextView.setText(sb.toString());
-                    }else{
-                        showMessage("请选择性别!");
+                        resultTextview.setText(sb.toString());
+                    }else {
+                        showMessage("请选择性别！");
                     }
-                }else{
-                    showMessage("请选择体重!");
+                }else {
+                    showMessage("请选择体重！");
                 }
             }
         });
     }
+
     private void showMessage(String message) {
-        AlertDialog alert=new AlertDialog.Builder(this).create();
+        AlertDialog alert = new AlertDialog.Builder(this).create();
         alert.setTitle("系统信息");
         alert.setMessage(message);
-        alert.setButton(DialogInterface.BUTTON_NEGATIVE, "确定", new DialogInterface.OnClickListener() {
+        alert.setButton(DialogInterface.BUTTON_POSITIVE,"确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -80,27 +80,32 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+    //计算标准身高体重
     private double evaluateHeight(Double weight, String sex) {
         double height;
-        if(sex=="男"){
-            height = 170-(62-weight)/0.6;
-        }else{
-            height = 158-(52-weight)/0.5;
+        if (sex == "男"){
+            height = 170 - ( 62 - weight) / 0.6;
+        }else {
+            height = 158 - ( 52 - weight) / 0.5;
         }
         return height;
     }
-    public boolean onCreateOptionsMenu(Menu menu){
+    //创建选项菜单
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0,1,0,"退出");
         return super.onCreateOptionsMenu(menu);
     }
-    public boolean onOptionsItemsSelected(MenuItem item){
 
-        switch(item.getItemId()){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
             case 1:
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
